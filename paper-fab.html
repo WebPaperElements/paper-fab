@@ -107,6 +107,10 @@ Custom property | Description | Default
       :host(.keyboard-focus) {
         background: var(--paper-fab-keyboard-focus-background, --paper-pink-900);
       }
+
+      :host:not([pressed]):hover {
+        @apply(--shadow-elevation-8dp);
+      }
     </style>
 
     <iron-icon id="icon" src="[[src]]" icon="[[icon]]"></iron-icon>
@@ -174,12 +178,8 @@ Custom property | Description | Default
       elevation: {
         type: Number,
         reflectToAttribute: true,
-        value: 1
+        value: 3
       },
-    },
-
-    ready: function () {
-      this.initialElevation = this.elevation;
     },
     
     /* Overrided from PaperButtonBehavior to be compliant with material design specs */
@@ -187,18 +187,16 @@ Custom property | Description | Default
     * TODO: Is missing the elevation depth 12dp on paper-styles. This should be the chosen one for the active state in case of initial elevation equals 3.
     */
     _calculateElevation: function() {
-      var e = this.initialElevation;
       if (this.disabled) {
         e = 0;
       } else if (this.active || this.pressed) {
-        e = this.initialElevation + 2;
-      } else if (this.receivedFocusFromKeyboard) {
-        e = this.initialElevation + 1;
-      }
-      /* Handling the limit of existent shadow depth configuration on paper-styles */
-      if (e > 5) {
         e = 5;
+      } else if (this.receivedFocusFromKeyboard) {
+        e = 4;
+      } else {
+        e = 3;
       }
+
       this.elevation = e;
     },
   });
